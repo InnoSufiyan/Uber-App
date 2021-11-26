@@ -2,10 +2,11 @@ import React from "react";
 import { StyleSheet, Text, View, SafeAreaView, Image } from "react-native";
 import tw from "twrnc";
 import NavOptions from "../../components/NavOptions";
+import NavFavourites from "../../components/NavFavourites";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { GOOGLE_MAPS_APIKEY } from "@env";
 import { useDispatch } from "react-redux";
-import { setDesitnation, setOrigin } from "../../slices/navSlice";
+import { setDestination, setOrigin } from "../../slices/navSlice";
 import { ScrollView } from "react-native-gesture-handler";
 
 const HomeScreen = () => {
@@ -25,7 +26,7 @@ const HomeScreen = () => {
           }}
         />
           <GooglePlacesAutocomplete
-            placeholder="Where you want to go?"
+            placeholder="From Where?"
             styles={{
               container: {
                 flex: 0,
@@ -39,7 +40,7 @@ const HomeScreen = () => {
                   location: details.geometry.location,
                   description: data.description
               }))
-              dispatch(setDesitnation(null))
+              dispatch(setDestination(null))
             }}
             fetchDetails={true}
             returnKeyType={"search"}
@@ -54,6 +55,7 @@ const HomeScreen = () => {
             debounce={400}
           />
         <NavOptions />
+        <NavFavourites />
       </View>
     </SafeAreaView>
   );
