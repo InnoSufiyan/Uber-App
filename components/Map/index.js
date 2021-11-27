@@ -1,10 +1,13 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import tw from "twrnc";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import MapView, { Marker } from "react-native-maps";
-import { selectOrigin } from "../../slices/navSlice";
-import { selectDestination } from "../../slices/navSlice";
+import {
+  selectDestination,
+  selectOrigin,
+  settravelTimeInformation,
+} from "../../slices/navSlice";
 import MapViewDirections from "react-native-maps-directions";
 import { GOOGLE_MAPS_APIKEY } from "@env";
 import { useRef, useEffect } from "react";
@@ -12,16 +15,40 @@ import { useRef, useEffect } from "react";
 const Map = () => {
   const origin = useSelector(selectOrigin);
   const destination = useSelector(selectDestination);
-  const mapRef = useRef(null)
+  const mapRef = useRef(null);
+  const dispatch = useDispatch();
 
-  useEffect(()=> {
-      if (!origin || !destination) return;
+  useEffect(() => {
+      console.log(origin, destination)
+    if (!origin || !destination) return;
 
-      mapRef?.current?.fitToSuppliedMarkers(["origin","destination"], {
-          edgePadding: { top:50, right:50, bottom:50, left:50 },
-      });
+    console.log("first useEffect")
 
-  }, [origin, destination])
+    mapRef?.current?.fitToSuppliedMarkers(["origin", "destination"], {
+      edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
+    });
+  }, [origin, destination]);
+
+  useEffect(() => {
+    console.log("ponka");
+    if (!origin || !destination) return;
+
+    console.log("second useEffect")
+    
+    const getTravelTime = () => {
+        console.log("third useEffect")
+      fetch(
+        `https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${origin.description}&destinations=${destination.description}&key=${GOOGLE_MAPS_APIKEY}`
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          dispatch(settravelTimeInformation(data.rows[0].elements[0]));
+          console.log("data------>",data);
+          console.log("ponka3------>");
+        });
+    };
+    getTravelTime();
+  }, [origin, destination, GOOGLE_MAPS_APIKEY]);
 
   return (
     <MapView

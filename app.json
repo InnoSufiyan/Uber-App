@@ -27,6 +27,8 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "description": "Uber App Clone... Assignment",
+    "githubUrl": "https://github.com/InnoSufiyan/Uber-App"
   }
 }
